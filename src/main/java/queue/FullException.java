@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Consumer;
+package queue;
 
 /**
  *
  * @author johannesriedmueller
  */
-public class Consumer extends Thread{
+public class FullException extends Exception {
     
 }

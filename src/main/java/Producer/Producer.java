@@ -5,10 +5,47 @@
  */
 package Producer;
 
+import bl.Book;
+import java.io.File;
+import queue.MyQueue;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import queue.FullException;
+
 /**
  *
  * @author johannesriedmueller
  */
-public class Producer {
-    
+public class Producer extends Thread {
+
+    private MyQueue<Book> queue;
+    private final File folderPath;
+
+    public Producer(MyQueue<Book> queue, File folderPath) {
+        this.queue = queue;
+        this.folderPath = folderPath;
+    }
+
+    @Override
+    public void run() {
+        for (File file : folderPath.listFiles()) {
+            if (!file.isDirectory()) {
+                synchronized (queue) {
+                    try {
+                        queue.put(new Book(file.getCanonicalPath(), ""));
+                    } catch (IOException io) {
+                        //nothing
+                    } catch (FullException full) {
+                        try {
+                            queue.wait();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
