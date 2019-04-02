@@ -8,7 +8,6 @@ package Producer;
 import bl.Book;
 import java.io.File;
 import queue.MyQueue;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import queue.FullException;
@@ -17,9 +16,9 @@ import queue.FullException;
  *
  * @author johannesriedmueller
  */
-public class Producer extends Thread {
+public class Producer implements Runnable {
 
-    private MyQueue<Book> queue;
+    private final MyQueue<Book> queue;
     private final File folderPath;
 
     public Producer(MyQueue<Book> queue, File folderPath) {
@@ -30,17 +29,21 @@ public class Producer extends Thread {
     @Override
     public void run() {
         for (File file : folderPath.listFiles()) {
-            if (!file.isDirectory()) {
-                synchronized (queue) {
-                    try {
-                        queue.put(new Book(file.getCanonicalPath(), ""));
-                    } catch (IOException io) {
-                        //nothing
-                    } catch (FullException full) {
+            boolean isInQueue = false;
+            while (!isInQueue) {
+                if (!file.isDirectory()) {
+                    synchronized (queue) {
                         try {
-                            queue.wait();
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+                            queue.put(new Book(file.getAbsolutePath(), ""));
+                            System.out.println("File: " + file.getAbsolutePath() + "\n");
+                            queue.notifyAll();
+                            isInQueue = true;
+                        } catch (FullException full) {
+                            try {
+                                queue.wait();
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     }
                 }
