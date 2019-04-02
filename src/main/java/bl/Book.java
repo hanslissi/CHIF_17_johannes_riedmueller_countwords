@@ -16,11 +16,9 @@ import java.util.HashMap;
 public class Book {
 
     private final String inputFilename;
-    private final String text;
 
-    public Book(String inputFilename, String text) {
+    public Book(String inputFilename) {
         this.inputFilename = inputFilename;
-        this.text = text;
     }
 
     public HashMap<String, Integer> countWords() throws Exception {

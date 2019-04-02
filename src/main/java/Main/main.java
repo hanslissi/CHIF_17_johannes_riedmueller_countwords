@@ -19,12 +19,12 @@ import queue.MyQueue;
 public class main {
 
     public static void main(String[] args) throws IOException {
-        MyQueue<Book> queue = new MyQueue<>(5);
-        
+        MyQueue<Book> queue = new MyQueue<>(3);
+
         Producer producer = new Producer(queue, new File("./files"));
-        
+
         Consumer consumer1 = new Consumer(queue);
-        
+
         new Thread(producer, "Producer").start();
         new Thread(consumer1, "Consumer 1").start();
         

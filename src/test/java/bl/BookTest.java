@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bl;
 
 import java.util.HashMap;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -13,7 +9,7 @@ import org.junit.Test;
  * @author johannesriedmueller
  */
 public class BookTest {
-    
+
     public BookTest() {
     }
 
@@ -22,11 +18,14 @@ public class BookTest {
      */
     @Test
     public void testCountWords() throws Exception {
-        Book book = new Book("./files/testText.txt", "");
+        Book book = new Book("./files/testText.txt");
         HashMap<String, Integer> map = book.countWords();
+        String result = "";
         for (String string : map.keySet()) {
-            System.out.println(string+": "+map.get(string));
+            result += string + ": " + map.get(string) + "\n";
         }
+        String expected = "hallo: 3\nJohannes: 2\nbin: 2\n";
+        assertTrue(result.equals(expected));
     }
-    
+
 }

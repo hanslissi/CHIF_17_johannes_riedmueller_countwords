@@ -34,7 +34,7 @@ public class Producer implements Runnable {
                 if (!file.isDirectory()) {
                     synchronized (queue) {
                         try {
-                            queue.put(new Book(file.getAbsolutePath(), ""));
+                            queue.put(new Book(file.getAbsolutePath()));
                             System.out.println("File: " + file.getAbsolutePath() + "\n");
                             queue.notifyAll();
                             isInQueue = true;
